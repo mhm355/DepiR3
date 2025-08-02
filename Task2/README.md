@@ -69,9 +69,6 @@ server {
     root /var/www/html/task2;
     index DateTime.php;
 
-    location / {
-        try_files $uri $uri/ =404;
-    }
 
     location /Screenshots/ {
         root /var/www/html/task2;
