@@ -56,7 +56,7 @@
 > login 
 `docker login -u mhmdocker1`
 
-## tag and push to docker hub registory
+## tag and push to docker hub registry
 
 `docker tag nginx:latest mhmdocker1/nginx:v1.0`
 
