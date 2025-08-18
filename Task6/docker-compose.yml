@@ -1,0 +1,34 @@
+version: "3"
+services:
+  db:
+    image: mysql
+    container_name: db
+    env_file:
+      - .env/db.env
+    ports:
+      - 3001:3306
+    volumes:
+      - ./db_data:/var/lib/mysql
+    networks:
+      - app_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$$MYSQL_ROOT_PASSWORD"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+  app:
+    build: .
+    container_name: sp_app
+    env_file:
+      - .env/app.env
+    ports:
+      - 3002:8080
+    networks:
+      - app_network
+    depends_on:
+      db:  
+        condition: service_healthy
+           
+networks:
+  app_network:
+
