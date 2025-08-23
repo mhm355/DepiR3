@@ -1,0 +1,17 @@
+# production docker-compose file
+services:
+  db:
+    image: postgres
+    container_name: db
+    env_file: ./.env/db-prod.env
+    ports:
+      - "5432:5432"
+    healthcheck: 
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - ./db_data_prod:/var/lib/postgresql/data
+  sp_app:
+    env_file: ./.env/app-prod.env

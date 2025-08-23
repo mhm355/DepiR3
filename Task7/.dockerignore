@@ -1,5 +1,9 @@
+Dockerfile
+docker-*
+pro*
+.env
 .git
 .gitignore
-Dockerfile*
 README.md
 Screenshots
+db_*

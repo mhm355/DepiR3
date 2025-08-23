@@ -1,0 +1,16 @@
+# development docker-compose file
+services:
+  db:
+    image: mysql
+    env_file: ./.env/db-dev.env
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$$MYSQL_ROOT_PASSWORD"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./db_data_dev:/var/lib/mysql
+  sp_app:
+    env_file: ./.env/app-dev.env

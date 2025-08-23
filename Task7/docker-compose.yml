@@ -1,0 +1,23 @@
+# common docker-compose file for development and production
+services:
+  db:
+    container_name: db
+    networks:
+      - app_network
+    restart: always
+  
+  sp_app:
+    build: .
+    container_name: sp_app
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - app_network
+networks:
+  app_network:
+    name: app_network
+    driver: bridge
+

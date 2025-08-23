@@ -1,53 +1,38 @@
-# Task4 Solution
+# Task 4 Solution
 
-## docker file with single layer
+## single stage docker file
 
 ```
-FROM openjdk:17-jdk-slim
-
+FROM eclipse-temurin:latest
 WORKDIR /app
-
-COPY . .
-
-RUN apt-get update
-RUN apt install -y curl
-RUN apt clean
-
+COPY ./spring-petclinic .
 EXPOSE 8080
-
-ENTRYPOINT [ "./mvnw", "spring-boot:run" ]
-
+RUN ./mvnw package -DskipTests
+ENTRYPOINT ["/bin/sh", "-c"]
+CMD ["java -jar /app/target/*.jar"]
 ```
 
-## docker file with multilayer
+## multistage docker file
 ```
+FROM eclipse-temurin:17-jdk as builder
+WORKDIR /app
+COPY ./spring-petclinic .
+RUN ./mvnw package -DskipTests
 
-FROM openjdk:17-jdk-slim
-
-ENV WORKDIR=/app
-
-WORKDIR $WORKDIR
-
-COPY target/spring-petclinic*.jar app.jar
-
-
-RUN apt-get update && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
-
+FROM eclipse-temurin:17-jre
+WORKDIR /app
+COPY --from=builder /app/target/*.jar /app/app.jar
 EXPOSE 8080
-
-ENTRYPOINT [ "java" ,"-jar" , "app.jar" ]
+CMD ["java", "-jar", "app.jar"]
 ```
 ## .dockerignore file
 ```
-.git
-.gitignore
+git
 Dockerfile*
-!target/*
 README.md
-*.log
+.gitignore
+Screenshots
 ```
 
 ## compare images size
-![compare](./Screenshots/comparesize.png)
+![compare](./Screenshots/compare.png)
