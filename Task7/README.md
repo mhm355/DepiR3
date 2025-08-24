@@ -92,7 +92,7 @@ services:
 
 > Run nexus using docker run
 
-`docker run -d -p 8081:8081 -p 8082:8082 --name nexus sonatype/nexus3`
+`docker run -d -p 8081:8081 -p 8082:8082 -v nexus:/nexus-data --name nexus sonatype/nexus3`
 
 * port `8081`: Nexus web UI (http://localhost:8081).
 
@@ -128,6 +128,8 @@ services:
 * `docker tag sp_image localhost:8082/sp_image`
 
 * `docker push localhost:8082/sp_image`
+
+![nexus](./Screenshots/image%20copy%202.png)
 
 
 
