@@ -87,3 +87,50 @@ services:
 
 ![ps_prod](./Screenshots/image%20copy.png)
 ![localhost-prod](./Screenshots/localhost_prod.png)
+
+## Configure Nexus
+
+> Run nexus using docker run
+
+`docker run -d -p 8081:8081 -p 8082:8082 --name nexus sonatype/nexus3`
+
+* port `8081`: Nexus web UI (http://localhost:8081).
+
+* port `8082`: Docker registry port. "Docker Registry API understands Docker client requests"
+
+> __Get Admin Password__
+
+`docker exec -it nexus cat /nexus-data/admin.password`
+
+> __Create Repo in nexus using localhost:8081__
+
+* http://localhost:8081 --> Sign in as admin --> Settings --> Repositories --> Create Repository --> docker (hosted) --> name the repo --> HTTP Port: 8082 --> save
+
+> Configure Docker to Trust Nexus Registry
+
+* vim /etc/docker/daemon.json
+
+    __add this content__
+```json
+  {
+  "insecure-registries": ["localhost:8082"]
+  }
+```
+
+* restart docker : `sudo systemctl restart docker`
+
+> Login to Nexus 
+
+* `docker login localhost:8082`
+
+> Tag and Push images
+
+* `docker tag sp_image localhost:8082/sp_image`
+
+* `docker push localhost:8082/sp_image`
+
+
+
+
+
+
