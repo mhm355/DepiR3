@@ -1,0 +1,27 @@
+# Dockerfile to create an rocky-based SSH server for Ansible
+FROM rockylinux:9
+
+# Install necessary packages
+RUN dnf update -y && \
+    dnf install -y openssh-server sudo python3 which && \
+    dnf clean all
+
+# Configure SSH
+RUN ssh-keygen -A
+
+# Create an ansible user with sudo privileges
+RUN useradd -m -s /bin/bash ansible && \
+    echo 'ansible:ansible' | chpasswd && \
+    usermod -aG wheel ansible && \
+    echo 'ansible ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+
+# Configure SSH to allow password authentication and root login
+RUN sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config && \
+    sed -i 's/#PermitRootLogin yes/PermitRootLogin yes/' /etc/ssh/sshd_config
+
+RUN echo 'root:root' | chpasswd
+
+EXPOSE 22
+
+# Start the SSH service
+CMD ["/usr/sbin/sshd", "-D"]
