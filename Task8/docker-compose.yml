@@ -1,0 +1,32 @@
+
+services:
+  ubuntu-machine:
+    build:
+      context: .
+      dockerfile: Dockerfile.ubuntu
+    container_name: ubuntu
+    ports:
+      - "2222:22" # Map host port 2222 to container port 22
+    hostname: ubuntu-machine
+    volumes:
+      - ~/.ssh/id_rsa.pub:/home/ansible/.ssh/authorized_keys:ro # Mount the public key for SSH access
+    networks:
+      - ansible-network
+
+  rocky-machine:
+    build:
+      context: .
+      dockerfile: Dockerfile.rocky
+    container_name: rocky
+    ports:
+      - "2223:22" # Map host port 2223 to container port 22
+    volumes:
+      - ~/.ssh/id_rsa.pub:/home/ansible/.ssh/authorized_keys:ro # Mount the public key for SSH access
+    hostname: rocky-machine
+    networks:
+      - ansible-network
+
+networks:
+  ansible-network:
+    name: ansible-network
+    driver: bridge
