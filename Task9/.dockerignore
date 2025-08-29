@@ -1,0 +1,12 @@
+README.md
+docker-compose*
+Dockerfile*
+Screenshots
+hosts*
+.git*
+.env
+playbook*
+install*
+.env*
+*.yml
+*.yaml
