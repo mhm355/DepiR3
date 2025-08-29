@@ -1,0 +1,194 @@
+# This playbook installs Docker on the ubuntu-machine and deploys the spring-petclinic application using Docker Compose.
+# It also installs Maven and Java, which are required for building and running the Spring application.
+# To Down the containers, comment the task "Run the Spring-petclinic application" and uncomment the task "Down the containers". 
+---
+- name: Install Docker and Deploy Spring-Petclinic Application
+  hosts: ubuntu
+  become: yes
+  tasks:
+  
+  - name: Copy install_docker_ubuntu.sh script to ubuntu
+    copy:
+      src: ./install_docker_ubuntu.sh
+      dest: /home/ansible/install_docker_ubuntu.sh
+      owner: ansible 
+      group: ansible
+      mode: '755'
+
+  - name: Run the Script
+    shell: /home/ansible/install_docker_ubuntu.sh
+    args:
+      executable: /bin/bash
+
+  - name: Verify Docker installation
+    command: docker --version
+    register: docker_version
+
+  - name: Display Docker version
+    debug:
+      msg: "{{ docker_version.stdout }}"
+    when: docker_version.rc == 0
+
+  - name: Docker is not installed
+    debug:
+      msg: "Docker is not installed."
+    when: docker_version.rc != 0
+
+  - name: Start and Enable Docker service
+    service:
+      name: docker
+      state: started
+      enabled: yes
+    when: docker_version.rc == 0
+
+  - name: Show Status of docker
+    command: service docker status
+    register: docker_status
+
+  - name: Display Docker service status
+    debug:
+      msg: "{{ docker_status.stdout }}"
+    when: docker_status.rc == 0
+
+  - name: Docker is not running
+    debug:
+      msg: " docker is not running "
+    when: docker_status.rc != 0
+
+  - name: Add ansible user to docker group
+    command: usermod -aG docker ansible
+    when: docker_status.rc == 0
+
+  - name: Create spring directory
+    file:
+      path: /home/ansible/spring
+      state: directory
+      owner: ansible
+      group: ansible
+      mode: '644'
+
+  - name: Copy Spring-petclinic files to ubuntu
+    copy:
+      src: ./spring-petclinic
+      dest: /home/ansible/spring
+      owner: ansible
+      group: ansible
+      mode: '644'
+
+  - name: Copy Spring-petclinic Dockerfile to ubuntu
+    copy:
+      src: ./Dockerfile
+      dest: /home/ansible/spring/Dockerfile
+      owner: ansible
+      group: ansible
+      mode: '644'
+
+  - name: Copy Spring-petclinic docker-compose.yml to ubuntu
+    copy:
+      src: ./docker-compose.yml
+      dest: /home/ansible/spring/docker-compose.yml
+      owner: ansible
+      group: ansible
+      mode: '644'
+
+  - name: Create .env directory
+    file:
+      path: /home/ansible/spring/.env
+      state: directory  
+      owner: ansible
+      group: ansible
+      mode: '644'
+
+  - name: Copy Spring-petclinic environment variables to ubuntu
+    copy:
+      src: ./.env/app.env
+      dest: /home/ansible/spring/.env/app.env
+      owner: ansible
+      group: ansible
+      mode: '644'
+
+  - name: Copy database environment variables to ubuntu
+    copy:
+      src: ./.env/db.env
+      dest: /home/ansible/spring/.env/db.env
+      owner: ansible
+      group: ansible
+      mode: '644'
+
+  - name: Copy .dockerignore to ubuntu
+    copy:
+      src: ./.dockerignore
+      dest: /home/ansible/spring/.dockerignore
+      owner: ansible
+      group: ansible
+      mode: '644'
+
+  - name: install maven in ubuntu
+    apt:
+      name: maven
+      state: present
+
+  - name: Verify maven installation
+    command: mvn --version
+    register: maven_check
+
+  - name: Display maven version
+    debug:
+      msg: "{{ maven_check.stdout }}"
+    when: maven_check.rc == 0
+
+  - name: Maven is not installed
+    debug:
+      msg: "Maven is not installed."
+    when: maven_check.rc != 0
+
+  - name: install java in ubuntu
+    apt:
+      name: openjdk-17-jdk
+      state: present
+      
+  - name: Verify java installation
+    command: java --version
+    register: java_version
+
+  - name: Display java version
+    debug:
+      msg: "{{ java_version.stdout }}"
+    when: java_version.rc == 0
+
+  - name: Java is not installed
+    debug:
+      msg: "Java is not installed."
+    when: java_version.rc != 0 
+  - name: Run the Spring-petclinic application
+    command: docker compose -f /home/ansible/spring/docker-compose.yml up -d
+
+  - name: Verify that containers are running
+    command: docker ps
+    register: docker_ps
+
+  - name: Display running containers 
+    debug:
+      msg: "{{ docker_ps.stdout }}"
+    when: docker_ps.rc == 0
+
+  - name: Docker containers are not running
+    debug:
+      msg: "Docker containers are not running."
+    when: docker_ps.rc != 0
+
+  - name: Stop the containers
+    command: docker compose -f /home/ansible/spring/docker-compose.yml stop
+    register: docker_stop
+
+  - name: Verify that containers are stopped
+    command: docker ps -a
+    register: docker_ps_a
+
+  - name: Display all containers
+    debug:
+      msg: "{{ docker_ps_a.stdout }}"
+    when: docker_stop.rc == 0
+
+
+
