@@ -1,0 +1,23 @@
+
+services:
+  ubuntu-machine:
+    build:
+      context: .
+      dockerfile: Dockerfile.ubuntu
+    container_name: ubuntu
+    ports:
+      - "2222:22" # Map host port 2222 to container port 22
+      - "3002:3002" # Map ubuntu machine port 3002 to sp container port 3002
+    hostname: ubuntu-machine
+    privileged: true # Enable privileged mode for Docker-in-Docker
+    volumes:
+     # - ./ubuntu:/home/ansible # Mount the ansible user home directory to the host
+     # - ./docker_data:/var/lib/docker # Mount the docker data to the host
+      - ~/.ssh/id_rsa.pub:/home/ansible/.ssh/authorized_keys:ro # Mount the public key for SSH access
+    networks:
+      - ansible-network
+
+networks:
+  ansible-network:
+    name: ansible-network
+    driver: bridge
