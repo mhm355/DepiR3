@@ -1,6 +1,6 @@
 # This playbook installs Docker on the ubuntu-machine and deploys the spring-petclinic application using Docker Compose.
 # It also installs Maven and Java, which are required for building and running the Spring application.
-# To Down the containers, comment the task "Run the Spring-petclinic application" and uncomment the task "Down the containers". 
+# To Down the containers, comment the task "Run the Spring-petclinic application" and uncomment the task "Stop the containers". 
 ---
 - name: Install Docker and Deploy Spring-Petclinic Application
   hosts: ubuntu
@@ -177,18 +177,18 @@
       msg: "Docker containers are not running."
     when: docker_ps.rc != 0
 
-  - name: Stop the containers
-    command: docker compose -f /home/ansible/spring/docker-compose.yml stop
-    register: docker_stop
+ # - name: Stop the containers
+ #   command: docker compose -f /home/ansible/spring/docker-compose.yml stop
+ #   register: docker_stop
 
-  - name: Verify that containers are stopped
-    command: docker ps -a
-    register: docker_ps_a
+#  - name: Verify that containers are stopped
+#    command: docker ps -a
+#    register: docker_ps_a
 
-  - name: Display all containers
-    debug:
-      msg: "{{ docker_ps_a.stdout }}"
-    when: docker_stop.rc == 0
+#  - name: Display all containers
+#    debug:
+#      msg: "{{ docker_ps_a.stdout }}"
+#   when: docker_stop.rc == 0
 
 
 
