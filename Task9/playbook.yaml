@@ -1,6 +1,6 @@
 # This playbook installs Docker on the ubuntu-machine and deploys the spring-petclinic application using Docker Compose.
 # It also installs Maven and Java, which are required for building and running the Spring application.
-# To Down the containers, comment the task "Run the Spring-petclinic application" and uncomment the task "Stop the containers". 
+# To Stop the containers, comment the task "Run the Spring-petclinic application" and uncomment the task "Stop the containers". 
 ---
 - name: Install Docker and Deploy Spring-Petclinic Application
   hosts: ubuntu
