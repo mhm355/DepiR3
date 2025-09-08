@@ -1,0 +1,21 @@
+pipeline {
+    agent any
+    stages {
+        satge('Build') {
+            steps {
+                echo 'Building the Spring petclinic application...'
+
+            }
+        }
+        stage('Test') {
+            steps {
+                echo 'Testing the Spring petclinic application...'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                echo 'Deploying the Spring petclinic application...'
+            }
+        }
+    }
+}
