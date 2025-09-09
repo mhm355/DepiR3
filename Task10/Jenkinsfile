@@ -1,7 +1,5 @@
 pipeline {
     agent any
-   
-    }
     
     stages {
         stage('Debug') {
@@ -28,7 +26,6 @@ pipeline {
         
         stage('Test') {
             steps {
-              
                 script {
                     sh '''
                     docker ps | grep sp_app || (echo "App container not found" && exit 1)
