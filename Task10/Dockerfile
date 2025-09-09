@@ -1,6 +1,6 @@
 FROM eclipse-temurin:17-jdk AS builder
 WORKDIR /app
-COPY ./spring-petclinic .
+COPY ./spring-petclinic_files .
 RUN ./mvnw package -DskipTests
 
 FROM eclipse-temurin:17-jre
