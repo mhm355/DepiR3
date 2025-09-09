@@ -17,7 +17,7 @@ services:
       timeout: 5s
       retries: 3
   app:
-    build: .
+    image: spring-petclinic:latest
     container_name: sp_app
     env_file:
       - .env/app.env
