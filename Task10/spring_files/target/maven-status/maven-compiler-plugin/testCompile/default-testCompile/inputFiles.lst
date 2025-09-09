@@ -1,0 +1,17 @@
+/home/mhm/Desktop/DepiR3/Task5/spring-petclinic/src/test/java/org/springframework/samples/petclinic/MySqlIntegrationTests.java
+/home/mhm/Desktop/DepiR3/Task5/spring-petclinic/src/test/java/org/springframework/samples/petclinic/MysqlTestApplication.java
+/home/mhm/Desktop/DepiR3/Task5/spring-petclinic/src/test/java/org/springframework/samples/petclinic/PetClinicIntegrationTests.java
+/home/mhm/Desktop/DepiR3/Task5/spring-petclinic/src/test/java/org/springframework/samples/petclinic/PostgresIntegrationTests.java
+/home/mhm/Desktop/DepiR3/Task5/spring-petclinic/src/test/java/org/springframework/samples/petclinic/model/ValidatorTests.java
+/home/mhm/Desktop/DepiR3/Task5/spring-petclinic/src/test/java/org/springframework/samples/petclinic/owner/OwnerControllerTests.java
+/home/mhm/Desktop/DepiR3/Task5/spring-petclinic/src/test/java/org/springframework/samples/petclinic/owner/PetControllerTests.java
+/home/mhm/Desktop/DepiR3/Task5/spring-petclinic/src/test/java/org/springframework/samples/petclinic/owner/PetTypeFormatterTests.java
+/home/mhm/Desktop/DepiR3/Task5/spring-petclinic/src/test/java/org/springframework/samples/petclinic/owner/PetValidatorTests.java
+/home/mhm/Desktop/DepiR3/Task5/spring-petclinic/src/test/java/org/springframework/samples/petclinic/owner/VisitControllerTests.java
+/home/mhm/Desktop/DepiR3/Task5/spring-petclinic/src/test/java/org/springframework/samples/petclinic/service/ClinicServiceTests.java
+/home/mhm/Desktop/DepiR3/Task5/spring-petclinic/src/test/java/org/springframework/samples/petclinic/service/EntityUtils.java
+/home/mhm/Desktop/DepiR3/Task5/spring-petclinic/src/test/java/org/springframework/samples/petclinic/system/CrashControllerIntegrationTests.java
+/home/mhm/Desktop/DepiR3/Task5/spring-petclinic/src/test/java/org/springframework/samples/petclinic/system/CrashControllerTests.java
+/home/mhm/Desktop/DepiR3/Task5/spring-petclinic/src/test/java/org/springframework/samples/petclinic/system/I18nPropertiesSyncTest.java
+/home/mhm/Desktop/DepiR3/Task5/spring-petclinic/src/test/java/org/springframework/samples/petclinic/vet/VetControllerTests.java
+/home/mhm/Desktop/DepiR3/Task5/spring-petclinic/src/test/java/org/springframework/samples/petclinic/vet/VetTests.java
