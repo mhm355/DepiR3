@@ -1,0 +1,77 @@
+pipeline {
+    agent any
+    
+    triggers {
+        githubPush()
+    }
+    
+    stages {
+        stage('Check') {
+            when {
+                expression {
+                    def specificFile = 'Task11/petclinic/docker-compose-app,db.yml'
+                    def allChangedFiles = []
+                    if (env.changed_files) {
+                        allChangedFiles.addAll(env.changed_files.split(','))
+                    }
+                    if (env.changed_files_added) {
+                        allChangedFiles.addAll(env.changed_files_added.split(','))
+                    }
+                    if (env.changed_files_removed) {
+                        allChangedFiles.addAll(env.changed_files_removed.split(','))
+                    }
+                    return allChangedFiles.contains(specificFile)
+                }
+            }
+            steps {
+                echo 'File change detected, proceeding with deployment...'
+            }
+        }
+        
+        stage('Debug') {
+            steps {
+                echo 'Listing workspace contents...'
+                sh 'ls -la'
+            }
+        }
+        
+        stage('Down Existing Containers') {
+            steps {
+                echo 'Stopping and removing existing containers...'
+                sh 'docker-compose -f Task11/petclinic/docker-compose-app,db.yml down'
+            }
+        }
+        
+        stage('Run') {
+            steps {
+                echo 'Running spring-petclinic application with Database using docker-compose...'
+                sh 'docker-compose -f Task11/petclinic/docker-compose-app,db.yml up -d'
+            }
+        }
+    }
+    
+    post {
+        success {
+            echo 'Pipeline completed successfully!'
+            slackSend (
+                channel: 'Jenkins-Springpetclinic',
+                color: 'good',
+                message: """ SpringPetclinc Application is running 
+                Commit: ${GIT_COMMIT}
+                Details: ${BUILD_URL}""",
+                tokenCredentialId: 'slack'
+            )
+        }
+        failure {
+            echo 'Pipeline failed.'
+            slackSend (
+                channel: 'Jenkins-Springpetclinic',
+                color: 'danger',
+                message: """ SpringPetclinc Application Failed to run. 
+                * Commit: ${GIT_COMMIT}
+                * Details: ${BUILD_URL}""",
+                tokenCredentialId: 'slack'
+            )
+        }
+    }
+}
