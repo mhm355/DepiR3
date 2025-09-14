@@ -32,7 +32,7 @@ services:
     
     networks:
       - monitoring
-      - petclinic-net
+     # - petclinic-net
 
   # 4. Node Exporter for system metrics
   node-exporter:
@@ -58,7 +58,7 @@ services:
     
     networks:
       - monitoring
-      - petclinic-net
+     # - petclinic-net
 
   # 5. cAdvisor for container metrics
   cadvisor:
@@ -83,7 +83,7 @@ services:
     
     networks:
       - monitoring
-      - petclinic-net
+     # - petclinic-net
 
   # 6. Grafana for visualization
   grafana:
@@ -108,16 +108,16 @@ services:
     
     networks:
       - monitoring
-      - petclinic-net
+     # - petclinic-net
 
 networks:
   monitoring:
     name: monitoring
     driver: bridge
 
-  petclinic-net:
-    name: petclinic-net
-    driver: bridge
+  #petclinic-net:
+   # name: petclinic-net
+    #driver: bridge
 
 
 volumes:
