@@ -31,7 +31,7 @@ pipeline {
         stage('Debug') {
             steps {
                 echo 'Listing workspace contents...'
-                sh 'ls -la Task11'
+                sh 'ls -la Task11/petclinic'
             }
         }
         
