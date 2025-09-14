@@ -1,0 +1,84 @@
+pipeline {
+    agent any
+    
+    triggers {
+        githubPush()
+    }
+    
+    stages {
+        stage('Check') {
+            when {
+                expression {
+                    def specificFiles = [
+                        'Task11/monitoring/docker-compose-monitoring.yml',
+                        'Task11/monitoring/prometheus/prometheus.yml'
+                    ]
+                    def allChangedFiles = []
+                    if (env.changed_files) {
+                        allChangedFiles.addAll(env.changed_files.split(','))
+                    }
+                    if (env.changed_files_added) {
+                        allChangedFiles.addAll(env.changed_files_added.split(','))
+                    }
+                    if (env.changed_files_removed) {
+                        allChangedFiles.addAll(env.changed_files_removed.split(','))
+                    }
+                    
+                    
+                    return specificFiles.any { file -> 
+                        allChangedFiles.contains(file)
+                    }
+                }
+            }
+            steps {
+                echo 'File change detected..'
+            }
+        }
+        
+        stage('Debug') {
+            steps {
+                echo 'Listing workspace contents...'
+                sh 'ls -la Task11/monitoring'
+            }
+        }
+        
+        stage('Down Existing Containers') {
+            steps {
+                echo 'Stopping and removing existing containers...'
+                sh 'docker-compose -f Task11/monitoring/docker-compose-monitoring.yml down'
+            }
+        }
+        
+        stage('Run') {
+            steps {
+                echo 'Running monitoring apps using docker-compose...'
+                sh 'docker-compose -f Task11/monitoring/docker-compose-monitoring.yml up -d'
+            }
+        }
+    }
+    
+    post {
+        success {
+            echo 'Pipeline completed successfully!'
+            slackSend (
+                channel: 'jenkins-monitoring',
+                color: 'good',
+                message: """ Monitoring Applications is running 
+                Commit: ${GIT_COMMIT}
+                Details: ${BUILD_URL}""",
+                tokenCredentialId: 'slack'
+            )
+        }
+        failure {
+            echo 'Pipeline failed.'
+            slackSend (
+                channel: 'jenkins-monitoring',
+                color: 'danger',
+                message: """ Monitoring Applications Failed to run. 
+                * Commit: ${GIT_COMMIT}
+                * Details: ${BUILD_URL}""",
+                tokenCredentialId: 'slack'
+            )
+        }
+    }
+}
