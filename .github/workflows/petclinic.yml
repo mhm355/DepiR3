@@ -14,11 +14,7 @@ jobs:
     
     steps:
 
-    - name: install docker-compose
-      run: |
-        echo "Installing docker-compose..."
-        sudo apt-get update
-        sudo apt-get install -y docker-compose-plugin
+
     - name: Checkout code
       uses: actions/checkout@v4
       
@@ -37,18 +33,18 @@ jobs:
     - name: Down existing containers
       run: |
         echo "Stopping and removing existing containers..."
-        docker-compose -f Task12/docker-compose-app,db.yml down || true
+        docker compose -f Task12/docker-compose-app,db.yml down || true
         
     - name: Run Spring Petclinic application
       run: |
         echo "Running spring-petclinic application with Database using docker-compose..."
-        docker-compose -f Task12/docker-compose-app,db.yml up -d
+        docker compose -f Task12/docker-compose-app,db.yml up -d
         
     - name: Wait for services to be healthy
       run: |
         echo "Waiting for services to start..."
         sleep 30
-        docker-compose -f Task12/docker-compose-app,db.yml ps
+        docker compose -f Task12/docker-compose-app,db.yml ps
         
     - name: Notify Slack on Success
       if: success()
