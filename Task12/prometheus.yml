@@ -24,8 +24,8 @@ scrape_configs:
     static_configs:
       - targets: ['cadvisor:8080']
 
- # - job_name: 'spring-petclinic-app'
-  #  metrics_path: /actuator/prometheus
-   # static_configs:
-    #  - targets: ['spring-petclinic-app:8080']
-    #scrape_interval: 10s
+  - job_name: 'spring-petclinic-app'
+    metrics_path: /actuator/prometheus
+    static_configs:
+      - targets: ['spring-petclinic-app:8080']
+    scrape_interval: 10s
