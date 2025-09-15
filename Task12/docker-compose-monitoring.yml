@@ -2,10 +2,6 @@
 
 services:
 
-
-  
-
-
   # 3. Prometheus for metrics collection
   prometheus:
     
