@@ -1,6 +1,5 @@
 # docker-compose file for Spring Petclinic application with MySQL database
-# 
-#
+
 services:
   database:
 
