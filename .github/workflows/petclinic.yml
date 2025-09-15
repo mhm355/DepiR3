@@ -51,7 +51,7 @@ jobs:
       uses: rtCamp/action-slack-notify@v2
       env:
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
-        SLACK_CHANNEL: Jenkins-Springpetclinic
+        SLACK_CHANNEL: github_action
         SLACK_COLOR: good
         SLACK_MESSAGE: |
           SpringPetclinic Application is running.
@@ -63,7 +63,7 @@ jobs:
       uses: rtCamp/action-slack-notify@v2
       env:
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
-        SLACK_CHANNEL: Jenkins-Springpetclinic
+        SLACK_CHANNEL: github_action
         SLACK_COLOR: danger
         SLACK_MESSAGE: |
           SpringPetclinic Application Failed to run.
