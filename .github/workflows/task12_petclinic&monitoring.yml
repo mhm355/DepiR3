@@ -45,7 +45,7 @@ jobs:
         context: ./Task12
         file: ./Task12/Dockerfile
         push: true
-        tags: ${{ secrets.DOCKER_HUB_USERNAME }}/github_spring-petclinic:${{ github.sha }}
+        tags: ${{ secrets.DOCKER_HUB_USERNAME }}/github_spring-petclinic
 
     - name: Notify Slack on Success
       if: success()
