@@ -221,5 +221,14 @@ slack api -> create new app -> enable incoming webhooks -> selecte channel -> co
 ![secrets](./Screenshots/image.png)
 
 
+### Plugins
 
-    
+
+1. [actions/checkout@v4](https://github.com/marketplace/actions/checkout) : Clones the repository onto the runner.
+
+2. [docker/login-action@v2](https://github.com/marketplace/actions/docker-login) : used to log in to a Docker registry
+
+3. [docker/build-push-action@v4](https://github.com/marketplace/actions/build-and-push-docker-images) : for building and pushing a Docker image
+
+4. [rtCamp/action-slack-notify@v2](https://github.com/marketplace/actions/slack-notify) : send notifications to a Slack channel
+
