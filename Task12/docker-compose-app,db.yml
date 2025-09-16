@@ -26,7 +26,7 @@ services:
       retries: 3
   petclinic-app:
 
-    image: mhmdocker1/spring-petclinic:latest
+    image: ${DOCKER_HUB_USERNAME}/github_spring-petclinic:${GITHUB_SHA}
   
     container_name: spring-petclinic-app
   

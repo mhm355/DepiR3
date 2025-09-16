@@ -114,6 +114,7 @@ networks:
   petclinic-net:
     name: petclinic-net
     driver: bridge
+    external: true
 
 
 volumes:
