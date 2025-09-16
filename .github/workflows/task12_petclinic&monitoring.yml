@@ -26,7 +26,7 @@ jobs:
     - name: Debug
       run: |
         echo "Listing workspace contents..."
-        ls -la Task12 
+        ls -la Task12/
 
   Build_Push_Docker_Image:
     runs-on: self-hosted
