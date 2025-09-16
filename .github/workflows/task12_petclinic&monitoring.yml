@@ -5,6 +5,7 @@ on:
       - 'Task12/docker-compose-app,db.yml'
       - 'Task12/docker-compose-monitoring.yml'
       - 'Task12/prometheus.yml'
+      - 'Task12/Dockerfile'
     branches:
       - main  
   workflow_dispatch:  
