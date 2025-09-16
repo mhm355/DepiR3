@@ -85,7 +85,7 @@ jobs:
     - name: Down existing containers
       run: |
         echo "Stopping and removing existing containers..."
-        docker compose -f Task12/docker-compose-app,db.yml down || true
+        docker compose -f Task12/docker-compose-app,db.yml down -v || true
         
     - name: Run Spring Petclinic application
       run: |
