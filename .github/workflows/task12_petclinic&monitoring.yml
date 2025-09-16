@@ -26,7 +26,7 @@ jobs:
     - name: Debug
       run: |
         echo "Listing workspace contents..."
-        ls -la Task12/
+        ls -la Task12 
 
   Build_Push_Docker_Image:
     runs-on: self-hosted
@@ -45,7 +45,7 @@ jobs:
         context: ./Task12
         file: ./Task12/Dockerfile
         push: true
-        tags: ${{ secrets.DOCKER_HUB_USERNAME }}/github_spring-petclinic
+        tags: ${{ secrets.DOCKER_HUB_USERNAME }}/github_spring-petclinic:${{ github.sha }}
 
     - name: Notify Slack on Success
       if: success()
@@ -67,7 +67,7 @@ jobs:
         SLACK_CHANNEL: github_action
         SLACK_COLOR: danger
         SLACK_MESSAGE: |
-          SpringPetclinic Image Failed to build.
+          SpringPetclinic Image Failed to Build.
           Commit: ${{ github.sha }}
           Details: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
@@ -85,7 +85,7 @@ jobs:
     - name: Down existing containers
       run: |
         echo "Stopping and removing existing containers..."
-        docker compose -f Task12/docker-compose-app,db.yml down -v || true
+        docker compose -f Task12/docker-compose-app,db.yml down || true
         
     - name: Run Spring Petclinic application
       run: |
