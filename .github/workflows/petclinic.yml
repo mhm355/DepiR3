@@ -3,6 +3,7 @@ name: Spring Petclinic Application
 on:
   push:
     paths:
+      - - 'Task12/Dockerfile'
       - 'Task12/docker-compose-app,db.yml'
     branches:
       - main  
@@ -27,7 +28,22 @@ jobs:
       run: |
         echo "Listing workspace contents..."
         ls -la Task12/
+
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKER_HUB_USERNAME }}
+        password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}  
+
+    - name: Build and Push Docker Image
+      uses: docker/build-push-action@v4
+      with:
+        context: ./Task12
+        file: ./Task12/Dockerfile
+        push: true
+        tags: ${{ secrets.DOCKER_HUB_USERNAME }}/spring-petclinic:${{ github.sha }}
         
+
   
         
     - name: Down existing containers
