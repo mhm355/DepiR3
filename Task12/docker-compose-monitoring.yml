@@ -1,8 +1,6 @@
-
-
 services:
 
-  # 3. Prometheus for metrics collection
+# 3. Prometheus for metrics collection
   prometheus:
     
     image: prom/prometheus
@@ -15,7 +13,7 @@ services:
       - "9091:9090"
     
     volumes:
-      - ./prometheus:/etc/prometheus
+      - ./prometheus.yml:/etc/prometheus.yml
       - prometheus-data:/prometheus
     
     command:
@@ -110,17 +108,11 @@ networks:
   monitoring:
     name: monitoring
     driver: bridge
-
   petclinic-net:
     name: petclinic-net
     driver: bridge
     external: true
 
-
 volumes:
   prometheus-data:
   grafana-data:
-  #sonarqube-data:
-  #sonarqube-extensions:
-  #sonarqube-logs:
-  #postgresql-data:
