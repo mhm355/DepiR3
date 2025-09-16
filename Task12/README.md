@@ -211,7 +211,7 @@ tar xzf ./actions-runner-linux-x64-2.328.0.tar.gz
 
 login to dockerhub -> account settings -> personal access token -> generate new token -> login to github -> repo sttings -> secrets and varables -> actions -> new repo secret
 
-    * ![dockerhub](./Screenshots/image%20copy.png)
+*   ![dockerhub](./Screenshots/image%20copy.png)
 
 
 3. `SLACK_WEBHOOK_URL:` : webhook URL for the Slack channel where receiving notifications.
