@@ -1,5 +1,13 @@
 # docker-compose file for Spring Petclinic application with MySQL database and Monitoring Services
+networks:
+  petclinic-net:
+    name: petclinic-net
+    driver: bridge
 
+volumes:
+  db_data:
+
+  
 services:
   database:
 
@@ -46,15 +54,6 @@ services:
       database:  
         condition: service_healthy
 
-networks:
-  petclinic-net:
-    name: petclinic-net
-    driver: bridge
-    external: true
-
-
-volumes:
-  db_data:
   #sonarqube-data:
   #sonarqube-extensions:
   #sonarqube-logs:
