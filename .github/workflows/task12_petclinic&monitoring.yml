@@ -24,7 +24,7 @@ jobs:
         SONAR_TOKEN: ${{ secrets.SONARQUBE_TOKEN }}
         SONAR_HOST_URL: ${{ vars.SONARQUBE_URL }}
       with:
-        projectBaseDir: Task12/spring-petclinic_files/pom.xml
+        projectBaseDir: Task12/spring-petclinic_files
           
   Build_Push_Docker_Image:
     needs: sonarqube
