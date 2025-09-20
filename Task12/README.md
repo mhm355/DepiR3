@@ -29,16 +29,40 @@ on:
   workflow_dispatch:  
 
 jobs:
+  sonarqube:
+    runs-on: ubuntu-latest
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4
+    
+    - name: Set up JDK
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: maven
+    
+    - name: Run SonarQube analysis with Maven
+      working-directory: Task12/spring-petclinic_files
+      run: mvn clean compile sonar:sonar -DskipTests=true -Dsonar.projectKey=spring-petclinic
+      env:
+        GITHUB_TOKEN: ${{ secrets.HUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONARQUBE_TOKEN }}
+        SONAR_HOST_URL: ${{ vars.SONARQUBE_URL }}
+          
   Build_Push_Docker_Image:
-    runs-on: self-hosted 
+    needs: sonarqube
+    runs-on: ubuntu-latest
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
+      
     - name: Log in to Docker Hub
       uses: docker/login-action@v2
       with:
-        username: ${{ secrets.DOCKER_HUB_USERNAME }}
+        username: ${{ vars.DOCKER_HUB_USERNAME }}
         password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+        
     - name: Build and Push Docker Image
       uses: docker/build-push-action@v4
       with:
@@ -55,7 +79,7 @@ jobs:
         SLACK_CHANNEL: github_action
         SLACK_COLOR: good
         SLACK_MESSAGE: |
-          SpringPetclinic Image build successful .
+          SpringPetclinic Image build successful.
           Commit: ${{ github.sha }}
           Details: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         
@@ -71,16 +95,17 @@ jobs:
           Commit: ${{ github.sha }}
           Details: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
-
-
   deploy-petclinic:
-    runs-on: self-hosted
-    needs: Build_Push_Docker_Image  # job runs after the Docker image has been built and pushed to docker hub.
+    runs-on: ubuntu-latest
+    needs: Build_Push_Docker_Image
 
     steps:
-
-    - name: Checkout Repository  # Clones the repository onto the runner.
+    - name: Checkout Repository
       uses: actions/checkout@v4
+      
+    - name: Update image tag in docker-compose file
+      run: |
+        sed -i "s|image: .*/github_spring-petclinic:.*|image: ${{ secrets.DOCKER_HUB_USERNAME }}/github_spring-petclinic:${{ github.sha }}|g" Task12/docker-compose-app,db.yml
 
     - name: Down existing containers
       run: docker compose -f Task12/docker-compose-app,db.yml down || true
@@ -116,11 +141,10 @@ jobs:
           Details: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
   deploy-monitoring:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     needs: deploy-petclinic
     
     steps:
-
     - name: Checkout Repository
       uses: actions/checkout@v4
   
@@ -138,7 +162,7 @@ jobs:
         SLACK_CHANNEL: github_action
         SLACK_COLOR: good
         SLACK_MESSAGE: |
-          Monitoring Applications are running 
+          Monitoring Applications are running.
           Commit: ${{ github.sha }}
           Details: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         
@@ -153,6 +177,7 @@ jobs:
           Monitoring Applications Failed to run.
           Commit: ${{ github.sha }}
           Details: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
 
 ```
 
@@ -220,8 +245,14 @@ slack api -> create new app -> enable incoming webhooks -> selecte channel -> co
 
 ![secrets](./Screenshots/image.png)
 
+4. `HUB_TOKEN` 
 
-### Plugins
+5. `SONARQUBE_TOKEN`
+
+6. `SONARQUBE_URL`
+
+
+### Actions
 
 
 1. [actions/checkout@v4](https://github.com/marketplace/actions/checkout) : Clones the repository onto the runner.
@@ -231,4 +262,6 @@ slack api -> create new app -> enable incoming webhooks -> selecte channel -> co
 3. [docker/build-push-action@v4](https://github.com/marketplace/actions/build-and-push-docker-images) : for building and pushing a Docker image
 
 4. [rtCamp/action-slack-notify@v2](https://github.com/marketplace/actions/slack-notify) : send notifications to a Slack channel
+
+5. [actions/setup-java@v3](https://github.com/marketplace/actions/setup-java-jdk) : allowing to work with Java and Scala projects.
 
