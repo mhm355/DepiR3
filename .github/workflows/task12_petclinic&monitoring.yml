@@ -25,6 +25,12 @@ jobs:
         SONAR_HOST_URL: ${{ vars.SONARQUBE_URL }}
       with:
         projectBaseDir: Task12/spring-petclinic_files
+        args: >
+          -Dsonar.projectKey=spring-petclinic
+          -Dsonar.projectName=Spring PetClinic
+          -Dsonar.sources=src/main/java
+          -Dsonar.tests=src/test/java
+          -Dsonar.java.binaries=target/classes
           
   Build_Push_Docker_Image:
     needs: sonarqube
