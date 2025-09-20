@@ -27,6 +27,7 @@ jobs:
         projectBaseDir: Task12/spring-petclinic_files/pom.xml
           
   Build_Push_Docker_Image:
+    needs: sonarqube
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
