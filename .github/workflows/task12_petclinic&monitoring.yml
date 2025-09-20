@@ -29,8 +29,8 @@ jobs:
       run: mvn clean compile sonar:sonar -DskipTests=true -Dsonar.projectKey=spring-petclinic
       env:
         GITHUB_TOKEN: ${{ secrets.HUB_TOKEN }}
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+        SONAR_TOKEN: ${{ secrets.SONARQUBE_TOKEN }}
+        SONAR_HOST_URL: ${{ vars.SONARQUBE_URL }}
           
   Build_Push_Docker_Image:
     needs: sonarqube
