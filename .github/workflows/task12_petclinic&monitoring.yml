@@ -78,7 +78,7 @@ jobs:
           Details: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
   deploy-petclinic:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: Build_Push_Docker_Image
 
     steps:
@@ -123,7 +123,7 @@ jobs:
           Details: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
   deploy-monitoring:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: deploy-petclinic
     
     steps:
