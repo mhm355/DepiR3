@@ -30,7 +30,6 @@ jobs:
           -Dsonar.projectName=SpringPetClinic
           -Dsonar.sources=src/main/java
           -Dsonar.tests=src/test/java
-          -Dsonar.java.binaries=target/classes
           
   Build_Push_Docker_Image:
     needs: sonarqube
