@@ -17,13 +17,14 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-    - name: sonar scan  
-      uses: kitabisa/sonarqube-action@master
+      
+    - name: Official SonarQube Scan
+      uses: SonarSource/sonarqube-scan-action@v6.0.0
+      env:
+        SONAR_TOKEN: ${{ secrets.SONARQUBE_TOKEN }}
+        SONAR_HOST_URL: ${{ vars.SONARQUBE_URL }}
       with:
-        host: ${{ vars.SONARQUBE_URL }}
-        login: ${{ secrets.SONARQUBE_TOKEN }}
-        projectBaseDir: "src/"
-        projectKey: "spring-petclinic"
+        projectBaseDir: Task12/spring-petclinic_files/pom.xml
           
   Build_Push_Docker_Image:
     runs-on: ubuntu-latest
