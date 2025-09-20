@@ -27,7 +27,7 @@ jobs:
         projectBaseDir: Task12/spring-petclinic_files
         args: >
           -Dsonar.projectKey=spring-petclinic
-          -Dsonar.projectName=Spring PetClinic
+          -Dsonar.projectName=SpringPetClinic
           -Dsonar.sources=src/main/java
           -Dsonar.tests=src/test/java
           -Dsonar.java.binaries=target/classes
