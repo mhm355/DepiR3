@@ -11,6 +11,16 @@ on:
   workflow_dispatch:  
 
 jobs:
+
+  sonarqube:
+    runs-on: ubutnu-latest
+    steps:
+    - name: SonarQube Scan
+      uses: kitabisa/sonarqube-action@v1.2.0
+      with:
+        host: ${{ vars.SONARQUBE_URL }}
+        login: ${{ secrets.SONARQUBE_TOKEN }}
+          
   Build_Push_Docker_Image:
     runs-on: ubuntu-latest
     steps:
