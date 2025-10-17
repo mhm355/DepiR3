@@ -10,10 +10,10 @@ services:
       - "3002:3002" # Map ubuntu machine port 3002 to sp container port 3002
     hostname: ubuntu-machine
     privileged: true # Enable privileged mode for Docker-in-Docker
-    volumes:
+    #volumes:
      # - ./ubuntu:/home/ansible # Mount the ansible user home directory to the host
      # - ./docker_data:/var/lib/docker # Mount the docker data to the host
-      - ~/.ssh/id_rsa.pub:/home/ansible/.ssh/authorized_keys:ro # Mount the public key for SSH access
+     # - ~/.ssh/id_rsa.pub:/home/ansible/.ssh/authorized_keys:ro # Mount the public key for SSH access
     networks:
       - ansible-network
 

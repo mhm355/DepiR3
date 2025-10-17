@@ -1,0 +1,82 @@
+# Database Secret
+apiVersion: v1
+kind: Secret
+metadata:
+  name: database-secret
+  namespace: petclinic
+type: Opaque
+stringData:
+  username: "petclinic"
+  password: "petclinic"
+
+---
+
+# Persistent Volume Claim for database
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: database-pvc
+  namespace: petclinic
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
+---
+# Database Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: database-deployment
+  namespace: petclinic
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: database
+  template:
+    metadata:
+      labels:
+        app: database
+    spec:
+      containers:
+        - name: database
+          image: mysql:8.0
+          ports:
+            - containerPort: 3306
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: "root"
+            - name: MYSQL_DATABASE
+              value: "petclinic-db"
+            - name: MYSQL_USER
+              valueFrom:
+                secretKeyRef:
+                  name: database-secret
+                  key: username
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: database-secret
+                  key: password
+          volumeMounts:
+            - name: database-pv
+              mountPath: /var/lib/mysql
+      volumes:
+        - name: database-pv
+          persistentVolumeClaim:
+            claimName: database-pvc
+---
+
+# Database Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: database-service
+  namespace: petclinic
+spec:
+  ports:
+    - port: 3306
+  selector:
+    app: database
