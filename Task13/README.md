@@ -2,9 +2,9 @@
 
 * Create spring-petclinic deployment and Service
 
-```yaml
-
 # Create Deployment
+
+```yaml
 
 apiVersion: apps/v1
 kind: Deployment
