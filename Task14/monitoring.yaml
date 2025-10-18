@@ -16,7 +16,7 @@ data:
         metrics_path: '/actuator/prometheus'
         kubernetes_sd_configs:
           - role: pod
-          	namespaces:
+            namespaces:
               names:
                 - petclinic
         relabel_configs:
@@ -68,9 +68,9 @@ spec:
   selector:
     app: prometheus
   ports:
-  - port: 9090
-    targetPort: 9090
-    nodePort: 30090
+    - port: 9090
+      targetPort: 9090
+      nodePort: 30090
 ---
 # Grafana ConfigMap
 apiVersion: v1
@@ -105,17 +105,17 @@ spec:
         app: grafana
     spec:
       containers:
-      - name: grafana
-        image: grafana/grafana:10.1.5
-        ports:
-        - containerPort: 3000
-        volumeMounts:
-        - name: grafana-cv
-          mountPath: /etc/grafana/provisioning/datasources
+        - name: grafana
+          image: grafana/grafana:10.1.5
+          ports:
+            - containerPort: 3000
+          volumeMounts:
+            - name: grafana-cv
+              mountPath: /etc/grafana/provisioning/datasources
       volumes:
-      - name: grafana-cv
-        configMap:
-          name: grafana-datasource-config
+        - name: grafana-cv
+          configMap:
+            name: grafana-datasource-config
 ---
 # Grafana Service
 apiVersion: v1
@@ -128,7 +128,6 @@ spec:
   selector:
     app: grafana
   ports:
-  - port: 3000
-    targetPort: 3000
-    nodePort: 30300
-
+    - port: 3000
+      targetPort: 3000
+      nodePort: 30300
