@@ -1,3 +1,30 @@
+# Prometheus ConfigMap
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-config
+  namespace: petclinic
+data:
+  prometheus.yml: |
+    global:
+      scrape_interval: 15s
+    scrape_configs:
+      - job_name: 'prometheus'
+        static_configs:
+          - targets: ['localhost:9090']
+      - job_name: 'petclinic'
+        metrics_path: '/actuator/prometheus'
+        kubernetes_sd_configs:
+          - role: pod
+          	namespaces:
+              names:
+                - petclinic
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_pod_label_app]
+            action: keep
+            regex: petclinic
+---
+
 # Prometheus Deployment
 apiVersion: apps/v1
 kind: Deployment
@@ -22,9 +49,6 @@ spec:
             - containerPort: 9090
           args:
             - "--config.file=/etc/prometheus/prometheus.yml"
-            - "--log.level=info"
-            - "--web.external-url=/monitoring-prometheus"
-            - "--web.route-prefix=/"
           volumeMounts:
             - name: prometheus-cv
               mountPath: /etc/prometheus/
