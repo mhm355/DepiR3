@@ -16,46 +16,64 @@ data:
         metrics_path: '/actuator/prometheus'
         kubernetes_sd_configs:
           - role: pod
+          	namespaces:
+              names:
+                - petclinic
         relabel_configs:
           - source_labels: [__meta_kubernetes_pod_label_app]
             action: keep
             regex: petclinic
+            
+          - source_labels: [__meta_kubernetes_pod_ip]
+            action: replace
+            target_label: __address__
+            replacement: $1:8080
+         
+          - source_labels: [__meta_kubernetes_pod_name]
+            action: replace
+            target_label: pod
+            
+          - source_labels: [__meta_kubernetes_namespace]
+            action: replace
+            target_label: namespace
 ---
 # Prometheus Deployment
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-	name: prometheus-deployment
-	namespace: petclinic
+  name: prometheus-deployment
+  namespace: petclinic
 spec:
-	replicas: 1
-	selector:
-		matchLabel:
-			app: prometheus
-	template:
-		metadata:
-			labels:
-				app: prometheus
-		spec:
-			containers:
-				- name: prometheus
-					image: prom/prometheus:v2.47.1
-					ports:
-						-	containerPort: 9090
-					args:
-          	- "--config.file=/etc/prometheus/prometheus.yml"
-					volumeMounts:
-						- name: prometheus-cv
-          		mountPath: /etc/prometheus/
-			volumes:
-			- name: prometheus-cv
-				configMap:
-				  name: prometheus-config
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prometheus
+  template:
+    metadata:
+      labels:
+        app: prometheus
+    spec:
+      serviceAccountName: prometheus-sa
+      containers:
+        - name: prometheus
+          image: prom/prometheus:v2.47.1
+          ports:
+            - containerPort: 9090
+          args:
+            - "--config.file=/etc/prometheus/prometheus.yml"
+            
+            - "--log.level=info"
+            - "--web.external-url=/monitoring-prometheus"
+            - "--web.route-prefix=/"
+          volumeMounts:
+            - name: prometheus-cv
+              mountPath: /etc/prometheus/
+      volumes:
+        - name: prometheus-cv
+          configMap:
+            name: prometheus-config
 ---
-
 # Prometheus Service
-
 apiVersion: v1
 kind: Service
 metadata:
@@ -69,11 +87,8 @@ spec:
   - port: 9090
     targetPort: 9090
     nodePort: 30090
-
 ---
-
-# Grafana ConfigMap 
-
+# Grafana ConfigMap
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -86,10 +101,9 @@ data:
     - name: Prometheus
       type: prometheus
       access: proxy
-      url: http://prometheus-service.petclinic.svc.cluster.local:9090
+      url: http://prometheus-service.petclinic.svc.cluster.local:9090/monitoring-prometheus
       isDefault: true
 ---
-
 # Grafana Deployment
 apiVersion: apps/v1
 kind: Deployment
@@ -111,6 +125,13 @@ spec:
         image: grafana/grafana:10.1.5
         ports:
         - containerPort: 3000
+        env:
+        - name: GF_SERVER_DOMAIN
+          value: "localhost"
+        - name: GF_SERVER_ROOT_URL
+          value: "%(protocol)s://%(domain)s/monitoring-grafana"
+        - name: GF_SERVER_SERVE_FROM_SUB_PATH
+          value: "true"
         volumeMounts:
         - name: grafana-cv
           mountPath: /etc/grafana/provisioning/datasources
@@ -133,3 +154,4 @@ spec:
   - port: 3000
     targetPort: 3000
     nodePort: 30300
+

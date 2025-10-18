@@ -4,5 +4,6 @@ resources:
   - namespace.yaml
   - database.yaml
   - petclinic.yaml
+  - prometheus-rbac.yaml
   - monitoring.yaml
   - ingress.yaml
